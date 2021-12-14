@@ -1,0 +1,9 @@
+* [0/1] Data
+** TODO Add other language trees
+* TODO Load data from Javascript
+  Using pure JSON (instead of loading a Javascript file with variable
+  assignment in the HTML).
+* TODO Refactor sortChildren() to use reduce()
+* TODO Radial dendrograms
+* TODO Add other language families
+* [eof]

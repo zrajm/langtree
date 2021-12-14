@@ -1,0 +1,140 @@
+<!DOCTYPE html><!--*- js-indent-level: 2; css-indent-offset: 2 -*-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Algic Languages Dendrogram</title>
+<link rel=icon href="data:,">
+<style>
+  .node circle {
+    fill: #000;
+    stroke-width: 0;
+    r: 4px;
+  }
+  .node.branch circle {
+    fill: #999;
+  }
+  .node text {
+    font: 14px sans-serif;
+    dominant-baseline: central; /*Firefox*/
+  }
+  .node.branch text {
+    text-anchor: end;
+    text-shadow:
+      0    2px 0 #fffa,
+      0   -2px 0 #fffa,
+      2px  0   0 #fffa,
+     -2px  0   0 #fffa;
+  }
+  .link {
+    fill: none;
+    stroke: #999;
+    stroke-width: 1.5px;
+  }
+  svg { border: 2px solid #000; }
+</style>
+<noscript style="background:#ff0">Diagrams below need Javascript to work.</noscript>
+<figure>
+  <svg class="algic"></svg>
+  <figcaption><b>The Algic Language Family.</b> Leaf nodes (on the right) link
+    to the Wikipedia article of that language, whereas other nodes link to the
+    corresponding language family description on Glottolog. Languages written
+    in <a href="https://en.wikipedia.org/wiki/Canadian_Aboriginal_syllabics">Canadian
+    Aboriginal syllabics</a> are marked in <b>bold</b> (though, for some of
+    these, the Latin script is also used).—Language relationship data is
+    from <a href="https://glottolog.org/">Glottolog</a>, information on which
+    languages uses syllabics is gathered from other sources (mostly Wikipedia).
+  </figcaption>
+</figure>
+<script src="d3.v7.min.js"></script>
+<script src="algic.js"></script>
+<script>
+  // https://bl.ocks.org/d3noob/7af3f29f3aa79fa674f6239a59bea648
+  /* global d3, treeData */
+  'use strict'
+
+  function depth(x) {
+    return x.children && x.children.length
+      ? Math.max(...x.children.map(x => depth(x))) + 1
+      : 0
+  }
+
+  // Set the dimensions and margins of the diagram.
+  let margin = { top: 10, right: 270, bottom: 10, left: 120 }
+  let width = 1000 - margin.left - margin.right
+  let height = 1400 - margin.top - margin.bottom
+
+  // Declares a tree layout and assigns the size.
+  // let treemap = d3.tree()   // tidy tree
+  let treemap = d3.cluster()  // dendrogram (leaf at same depth)
+    .size([height, width])
+
+  // Sort children by branch depth, with shallowest branches in the middle, and
+  // deeper branches at the beginning and end.
+  function sortChildren(x) {
+    if (x.children && x.children.length) {
+      let p = {}                 // partitioned by depth
+      x.children.forEach(c => {
+        const d = depth(c)
+        if (!p[d]) { p[d] = [] }
+        p[d].push(c)
+      })
+
+      let o = []
+      Object.keys(p).sort((a, b) => a - b).forEach((i) => {
+        p[i].sort((a, b) => d3.ascending(a.name, b.name))
+
+        let m = Math.round(p[i].length / 2)   // middle
+
+        o.unshift(...p[i].slice(0, m))
+        o.push(...p[i].slice(m))
+      })
+      x.children = o
+
+      x.children.forEach(sortChildren)
+    }
+  }
+
+  sortChildren(treeData)
+
+  // Assigns the data to a hierarchy using parent-child relationships.
+  let nodes = d3.hierarchy(treeData, d => d.children)
+
+  nodes = treemap(nodes)            // map node data onto tree layout
+
+  let svg = d3.select('svg.algic')  // append <svg> to body of page
+    .attr('width', width + margin.left + margin.right)
+    .attr('height', height + margin.top + margin.bottom)
+
+  let g = svg.append('g')           // append <g> to SVG, and put at top/left margin
+    .attr('transform', `translate(${margin.left},${margin.top})`)
+
+  g.selectAll('.link')              // links between nodes
+    .data(nodes.descendants().slice(1))
+    .enter().append('path')
+    .classed('link', true)
+    .attr('d', d => `M${d.y},${d.x}`
+      + `C${(d.y + d.parent.y) / 2},${d.x}`
+      + ` ${(d.y + d.parent.y) / 2},${d.parent.x}`
+      + ` ${d.parent.y},${d.parent.x}`
+    )
+
+  let node = g.selectAll('.node')  // add each node as a <g>
+    .data(nodes.descendants())
+    .enter().append('g')
+    .attr('class', d => `node ${d.children ? 'branch' : 'leaf'} ${d.data.type}`)
+    .attr('transform', d => `translate(${d.y},${d.x})`)
+
+  node.append('circle')  // radius in CSS
+
+  node.append('a')
+    .attr('href', d => (d.data.wiki
+      ? `//en.wikipedia.org/wiki/${d.data.wiki}`
+      : (d.data.glottolog
+        ? `//glottolog.org/resource/languoid/id/${d.data.glottolog}`
+        : d.data.href)))
+    .attr('target', '_blank')
+    .append('text')              // add text to node
+    .attr('x', d => d.children ? -7 : 7)
+    .style('font-weight', d => d.data.cas ? 'bold' : 'normal')
+    .text(d => d.data.name)
+</script>
+<!--[eof]-->
