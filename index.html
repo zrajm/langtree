@@ -1,9 +1,18 @@
 <!DOCTYPE html><!--*- js-indent-level: 2; css-indent-offset: 2 -*-->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Algic Languages Dendrogram</title>
+<title>How Widespread Are Syllabics?</title>
 <link rel=icon href="data:,">
 <style>
+  /* * { margin: 0; padding: 0; box-sizing: border-box; } */
+  html {
+    font-family: 'sans';
+    line-height: 1.75em;
+  }
+  p:not(:empty) + p:not(:empty) {
+    margin-top: -1em;
+    text-indent: 1.75em;
+  }
   .node circle {
     fill: #000;
     stroke-width: 0;
@@ -30,20 +39,50 @@
     stroke-width: 1.5px;
   }
   svg { border: 2px solid #000; }
+  .FIXME { background: #ff0; }
 </style>
 <noscript style="background:#ff0">Diagrams below need Javascript to work.</noscript>
-<figure>
-  <svg class="algic"></svg>
-  <figcaption><b>The Algic Language Family.</b> Leaf nodes (on the right) link
-    to the Wikipedia article of that language, whereas other nodes link to the
-    corresponding language family description on Glottolog. Languages written
-    in <a href="https://en.wikipedia.org/wiki/Canadian_Aboriginal_syllabics">Canadian
-    Aboriginal syllabics</a> are marked in <b>bold</b> (though, for some of
-    these, the Latin script is also used).—Language relationship data is
-    from <a href="https://glottolog.org/">Glottolog</a>, information on which
-    languages uses syllabics is gathered from other sources (mostly Wikipedia).
-  </figcaption>
-</figure>
+<section>
+  <h1>How Widespread are Syllabics?</h1>
+
+  <p>I recently did some research on Canadian Aboriginal syllabics and its
+  history and use in the Ojibwa, Cree and Inuit language families (in order
+  make an adaptation of <a href="../toki-pona-syllabics/">syllabics for Toki
+  Pona</a>). While reading up on the subject, I got curious as to how
+  widespread the writing system is — how many of the aboriginal languages of
+  North America use syllabics? (And how many out of the total number of
+  speakers?)
+
+  <p>This page is an attempt to show that. I started off by making language
+  family trees for the North American aboriginal languages, and highlighting
+  (in <b>bold</b>) the languages that use syllabics (to at least some degree).
+
+  <ul class=FIXME>
+    <li><b>FIXME</b> Add tree for the Athabascan language family
+    <li><b>FIXME</b> Add tree for the Inuit language family
+  </ul>
+
+  <p><p>Language relationship data comes
+  from <a href="//glottolog.org/">Glottolog</a>, while the information on which
+  languages uses syllabics is gathered from other sources
+  (mostly <a href="//wikipedia.org/">Wikipedia</a> and the Canadian Aboriginal
+  syllabics Unicode information).
+
+  <figure>
+    <svg class="algic"></svg>
+    <figcaption><b>The Algic Language Family.</b> Leaf nodes (on the right)
+      link to the Wikipedia article of that language, whereas other nodes link
+      to the corresponding language family description on Glottolog. Languages
+      written
+      in <a href="https://en.wikipedia.org/wiki/Canadian_Aboriginal_syllabics">Canadian
+      Aboriginal syllabics</a> are marked in <b>bold</b> (though, for some of
+      these, the Latin script is also used).—Language relationship data is
+      from <a href="https://glottolog.org/">Glottolog</a>, information on which
+      languages uses syllabics is gathered from other sources (mostly
+      Wikipedia).
+    </figcaption>
+  </figure>
+</section>
 <script src="d3.v7.min.js"></script>
 <script src="algic.js"></script>
 <script>
