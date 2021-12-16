@@ -1,12 +1,10 @@
-//-*- js-indent-level: 2; css-indent-offset: 2 -*-
-// Data from: https://glottolog.org/glottolog/family
-let treeData = { "name": "Algic", "glottolog": "algi1248", "type": "family", "children": [
+{ "name": "Algic", "glottolog": "algi1248", "type": "family", "children": [
   { "name": "Algonquian-Blackfoot", "glottolog": "algo1256", "type": "family", "children": [
     { "name": "Algonquian", "glottolog": "algo1257", "type": "family", "children": [
       { "name": "Arapahoic", "glottolog": "arap1273", "type": "family", "children": [
         { "name": "Arapaho-Gros Ventre-Besawunena", "glottolog": "arap1280", "type": "family", "children": [
           { "name": "Arapaho", "glottolog": "arap1274", "type": "language", "cas": false },
-          { "name": "Gros Ventre", "glottolog": "gros1243", "type": "language", "cas": false },
+          { "name": "Gros Ventre", "glottolog": "gros1243", "type": "language", "cas": false }
         ]},
         { "name": "Nawathinehena", "glottolog": "nawa1259", "type": "language", "cas": false }
       ]},
@@ -146,4 +144,3 @@ let treeData = { "name": "Algic", "glottolog": "algi1248", "type": "family", "ch
   { "name": "Wiyot", "glottolog": "wiyo1248", "type": "language", "cas": false },
   { "name": "Yurok", "glottolog": "yuro1248", "type": "language", "cas": false }
 ]}
-//[eof]

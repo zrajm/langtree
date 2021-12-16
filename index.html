@@ -85,35 +85,26 @@
   </figure>
 </section>
 <script src="d3.v7.min.js"></script>
-<script src="algic.js"></script>
 <script>
   // https://bl.ocks.org/d3noob/7af3f29f3aa79fa674f6239a59bea648
-  /* global d3, treeData */
+  /* global d3 */
   'use strict'
-
   function depth(x) {
     return x.children && x.children.length
       ? Math.max(...x.children.map(x => depth(x))) + 1
       : 0
   }
-
-  // Set the dimensions and margins of the diagram.
-  let margin = { top: 10, right: 270, bottom: 10, left: 120 }
-  let width = 1000 - margin.left - margin.right
-  let height = 1400 - margin.top - margin.bottom
-
-  // Declares a tree layout and assigns the size.
-  // let treemap = d3.tree()   // tidy tree
-  let treemap = d3.cluster()  // dendrogram (leaf at same depth)
-    .size([height, width])
-
+  function countChildren(x) {
+    return x.children && x.children.length
+      ? x.children.reduce((a, o) => a + countChildren(o), 0)
+      : 1
+  }
   // Recursively filter lists in specified node.
   function filterChildren(o = {}, f = () => false, n = 'children') {
     return o[n] ? Object.assign({}, o, {
       [n]: o[n].filter(f).map(o => filterChildren(o, f, n)),
     }) : o
   }
-
   // Sort children by branch depth, with shallowest branches in the middle, and
   // deeper branches at the beginning and end.
   function sortChildren(x) {
@@ -134,53 +125,69 @@
       x.children.forEach(sortChildren)
     }
   }
+  function loadDiagram(selector, file) {
+    d3.json(file).then(data => createDiagram(selector, data))
+  }
+  function createDiagram(selector, treeData) {
+    treeData = filterChildren(treeData, c => c.type !== 'dialect')
+    sortChildren(treeData)
 
-  treeData = filterChildren(treeData, c => c.type !== 'dialect')
-  sortChildren(treeData)
+    // Set the dimensions and margins of the diagram.
+    let margin = { top: 10, right: 270, bottom: 10, left: 120 }
+    let width = 1000 - margin.left - margin.right
+    let height = (countChildren(treeData) * 30) - margin.top - margin.bottom
 
-  // Assigns the data to a hierarchy using parent-child relationships.
-  let nodes = d3.hierarchy(treeData, d => d.children)
+    // Declares a tree layout and assigns the size.
+    // let treemap = d3.tree()   // tidy tree
+    let treemap = d3.cluster()  // dendrogram (leaf at same depth)
+      .size([height, width])
 
-  nodes = treemap(nodes)            // map node data onto tree layout
+    // Assigns the data to a hierarchy using parent-child relationships.
+    let nodes = d3.hierarchy(treeData, d => d.children)
+    nodes = treemap(nodes)            // map node data onto tree layout
 
-  let svg = d3.select('svg.algic')  // append <svg> to body of page
-    .attr('width', width + margin.left + margin.right)
-    .attr('height', height + margin.top + margin.bottom)
+    let svg = d3.select(selector)     // append to <svg>
+      .attr('width', width + margin.left + margin.right)
+      .attr('height', height + margin.top + margin.bottom)
 
-  let g = svg.append('g')           // append <g> to SVG, and put at top/left margin
-    .attr('transform', `translate(${margin.left},${margin.top})`)
+    let g = svg.append('g')           // append <g> to SVG, and put at top/left margin
+      .attr('transform', `translate(${margin.left},${margin.top})`)
 
-  g.selectAll('.link')              // links between nodes
-    .data(nodes.descendants().slice(1))
-    .enter().append('path')
-    .classed('link', true)
-    .attr('d', d => `M${d.y},${d.x}`
-      + `C${(d.y + d.parent.y) / 2},${d.x}`
-      + ` ${(d.y + d.parent.y) / 2},${d.parent.x}`
-      + ` ${d.parent.y},${d.parent.x}`
+    g.selectAll('.link')              // links between nodes
+      .data(nodes.descendants().slice(1))
+      .enter().append('path')
+      .classed('link', true)
+      .attr('d', d => `M${d.y},${d.x}`
+        + `C${(d.y + d.parent.y) / 2},${d.x}`
+        + ` ${(d.y + d.parent.y) / 2},${d.parent.x}`
+        + ` ${d.parent.y},${d.parent.x}`
+      )
+
+    let node = g.selectAll('.node')  // add each node as a <g>
+      .data(nodes.descendants())
+      .enter().append('g')
+      .attr('class', d => `node ${d.children ? 'branch' : 'leaf'} ${d.data.type}`)
+      .attr('transform', d => `translate(${d.y},${d.x})`)
+
+    node.append('title').text(
+      d => `${d.data.type}: ${d.data.name}`
+        + (typeof d.data.cas === 'string' ? `, ${d.data.cas}` : '')
+        + (d.data.year ? ` (adapted ${d.data.year})` : '')
     )
+    node.append('circle')  // radius in CSS
+    node.append('a')
+      .attr('href', d => d.data.type === 'language'
+        ? '//en.wikipedia.org/wiki/'
+          + `${d.data.name.replace(/ /g, '_').replace(/’/g, "'") + '_language'}`
+        : `//glottolog.org/resource/languoid/id/${d.data.glottolog}`
+      )
+      .attr('target', '_blank')
+      .append('text')              // add text to node
+      .attr('x', d => d.children ? -7 : 7)
+      .style('font-weight', d => d.data.cas ? 'bold' : 'normal')
+      .text(d => d.data.name)
+  }
 
-  let node = g.selectAll('.node')  // add each node as a <g>
-    .data(nodes.descendants())
-    .enter().append('g')
-    .attr('class', d => `node ${d.children && d.children.length > 0 ? 'branch' : 'leaf'} ${d.data.type}`)
-    .attr('transform', d => `translate(${d.y},${d.x})`)
-
-  node.append('title').text(
-    d => `${d.data.type}: ${d.data.name}`
-      + (typeof d.data.cas === 'string' ? `, ${d.data.cas}` : '')
-      + (d.data.year ? ` (adapted ${d.data.year})` : '')
-  )
-  node.append('circle')  // radius in CSS
-  node.append('a')
-    .attr('href', d => d.data.type === 'language'
-       ? `//en.wikipedia.org/wiki/${d.data.wiki || d.data.name.replace(/ /g, "_").replace(/’/g, "'") + '_language'}`
-       : `//glottolog.org/resource/languoid/id/${d.data.glottolog}`
-    )
-    .attr('target', '_blank')
-    .append('text')              // add text to node
-    .attr('x', d => d.children ? -7 : 7)
-    .style('font-weight', d => d.data.cas ? 'bold' : 'normal')
-    .text(d => d.data.name)
+  loadDiagram('svg.algic', 'algic.json')
 </script>
 <!--[eof]-->

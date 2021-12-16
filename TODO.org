@@ -1,9 +1,10 @@
-* TODO Load data from Javascript
-  Using pure JSON (instead of loading a Javascript file with variable
-  assignment in the HTML).
-* TODO Refactor sortChildren() to use reduce()
+* TODO Include all language families in text
 * TODO Radial dendrograms
 * FINISHED
+** DONE Load JSON data from Javascript
+   CLOSED: [2021-12-16 Thu 23:18]
+   Using pure JSON (instead of loading a Javascript file with variable
+   assignment in the HTML).
 ** DONE Refactor sortChildren() to use reduce()
    CLOSED: [2021-12-16 Thu 07:05]
 ** DONE Athabaskan-Eyak-Tlingit language tree
