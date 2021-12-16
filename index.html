@@ -117,24 +117,19 @@
   // deeper branches at the beginning and end.
   function sortChildren(x) {
     if (x.children && x.children.length) {
-      let p = {}                 // partitioned by depth
-      x.children.forEach(c => {
+      let p = x.children.reduce((a, c) => {  // key = branch depth
         const d = depth(c)
-        if (!p[d]) { p[d] = [] }
-        p[d].push(c)
-      })
-
-      let o = []
-      Object.keys(p).sort((a, b) => a - b).forEach((i) => {
+        a[d] = (a[d] || []).concat(c)
+        return a
+      }, {})
+      // Put shallow branches in middle of list, deep at beginning/end.
+      x.children = Object.keys(p).sort((a, b) => a - b).reduce((a, i) => {
         p[i].sort((a, b) => d3.ascending(a.name, b.name))
-
-        let m = Math.round(p[i].length / 2)   // middle
-
-        o.unshift(...p[i].slice(0, m))
-        o.push(...p[i].slice(m))
-      })
-      x.children = o
-
+        const m = Math.round(p[i].length / 2)  // middle
+        a.unshift(...p[i].slice(0, m))
+        a.push(...p[i].slice(m))
+        return a
+      }, [])
       x.children.forEach(sortChildren)
     }
   }

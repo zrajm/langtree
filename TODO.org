@@ -4,6 +4,8 @@
 * TODO Refactor sortChildren() to use reduce()
 * TODO Radial dendrograms
 * FINISHED
+** DONE Refactor sortChildren() to use reduce()
+   CLOSED: [2021-12-16 Thu 07:05]
 ** DONE Athabaskan-Eyak-Tlingit language tree
    CLOSED: [2021-12-16 Thu 05:06]
    Glottolog: https://glottolog.org/resource/languoid/id/atha1245
