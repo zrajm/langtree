@@ -106,6 +106,13 @@
   let treemap = d3.cluster()  // dendrogram (leaf at same depth)
     .size([height, width])
 
+  // Recursively filter lists in specified node.
+  function filterChildren(o = {}, f = () => false, n = 'children') {
+    return o[n] ? Object.assign({}, o, {
+      [n]: o[n].filter(f).map(o => filterChildren(o, f, n)),
+    }) : o
+  }
+
   // Sort children by branch depth, with shallowest branches in the middle, and
   // deeper branches at the beginning and end.
   function sortChildren(x) {
@@ -132,6 +139,7 @@
     }
   }
 
+  treeData = filterChildren(treeData, c => c.type !== 'dialect')
   sortChildren(treeData)
 
   // Assigns the data to a hierarchy using parent-child relationships.
@@ -159,17 +167,20 @@
   let node = g.selectAll('.node')  // add each node as a <g>
     .data(nodes.descendants())
     .enter().append('g')
-    .attr('class', d => `node ${d.children ? 'branch' : 'leaf'} ${d.data.type}`)
+    .attr('class', d => `node ${d.children && d.children.length > 0 ? 'branch' : 'leaf'} ${d.data.type}`)
     .attr('transform', d => `translate(${d.y},${d.x})`)
 
+  node.append('title').text(
+    d => `${d.data.type}: ${d.data.name}`
+      + (typeof d.data.cas === 'string' ? `, ${d.data.cas}` : '')
+      + (d.data.year ? ` (adapted ${d.data.year})` : '')
+  )
   node.append('circle')  // radius in CSS
-
   node.append('a')
-    .attr('href', d => (d.data.wiki
-      ? `//en.wikipedia.org/wiki/${d.data.wiki}`
-      : (d.data.glottolog
-        ? `//glottolog.org/resource/languoid/id/${d.data.glottolog}`
-        : d.data.href)))
+    .attr('href', d => d.data.type === 'language'
+       ? `//en.wikipedia.org/wiki/${d.data.wiki || d.data.name.replace(/ /g, "_").replace(/’/g, "'") + '_language'}`
+       : `//glottolog.org/resource/languoid/id/${d.data.glottolog}`
+    )
     .attr('target', '_blank')
     .append('text')              // add text to node
     .attr('x', d => d.children ? -7 : 7)

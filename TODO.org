@@ -3,8 +3,9 @@
   assignment in the HTML).
 * TODO Refactor sortChildren() to use reduce()
 * TODO Radial dendrograms
-* [0/2] Add other language families
-** TODO Athabaskan-Eyak-Tlingit language tree
+* FINISHED
+** DONE Athabaskan-Eyak-Tlingit language tree
+   CLOSED: [2021-12-16 Thu 05:06]
    Glottolog: https://glottolog.org/resource/languoid/id/atha1245
 
    There are a number of Athabascan languages given by name in the Canadian
@@ -13,7 +14,8 @@
    + Carrier (ᑕᗸᒡ)
    + Sayisi Dene (ᓴᔨᓯ ᑌᓀ) (according to Wikipedia a Chipewyan language)
    + South Slavey
-** TODO Inuit language tree
+** DONE Inuit language tree
+   CLOSED: [2021-12-16 Thu 05:06]
    + Aivilik dialect (Inuit)
    + Nunavik
 * [eof]

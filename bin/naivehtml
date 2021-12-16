@@ -1,0 +1,93 @@
+#!/bin/perl
+# Copyright (c) 2021 zrajm, Uppsala, Sweden.
+
+my $HELP = <<'END_HELP';
+Usage: naivehtml [--remove|--unwrap] [REGEX] <INFILE >OUTFILE
+Indent HTML, optionally highlight or remove tags matching PATTERN.
+
+Options:
+  -u,--unwrap  remove start/end tag, but keep tag content
+
+HTML input is always given on standard input, output always goes to standard
+output (use shell redirects!).
+
+HTML is always indented, and, if an optional REGEX (a Perl regular expression)
+is present, then each matching start tag and the corresponding end tag will be
+highlighted. (When piping output to `less`, use `less -R` to preserve the
+highlighting.) -- The REGEX is applied to the full start tag from `<` to `>`,
+so a REGEX of '^<div>$' will match all div tags without attributes.
+
+If `--unwrap` is used, start/end tags are removed from the output instead of
+highlighted (the text content inside the tag is kept as-is, however).
+
+NOTE: This is a naïve piece of software. It was only created to facilitate the
+reduction of Glottolog language trees from HTML to JSON, as such it might not
+be suitable for your usecase. YMMV.
+END_HELP
+
+local $SIG{__DIE__} = sub {
+    die shift() . "Try '$0 --help' for more information.\n";
+};
+
+# Check for options.
+if (-t STDIN) { die "$0: input required on standard input\n" }
+if (grep /^(-h|--help)$/, @ARGV) { print "$HELP\n"; exit 0 }
+my $unwrap = grep /^(-u|--unwrap)$/, @ARGV;
+my $remove = grep /^(-r|--remove)$/, @ARGV;
+@ARGV = grep !/^--(unwrap|remove)$/, @ARGV;
+
+# Do stuff.
+my $indent = 0;
+my $last = '';
+my @stack;
+
+# Don't indent these tags.
+my %empty = map { $_, 1 } qw/input img/;
+
+my $regex = shift @ARGV || '$^';
+my $text = do { undef $/; <STDIN> };
+
+# Yes, the main loop is a single regex, what's your problem?
+$text =~ s{\s*(<(/?)(\w+)[^>]*>)}{
+    # (This approach is especially naïve since we can only affect the start and
+    # end tags, not anything between them.)
+    my ($whole, $end, $tag) = ($1, $2, $3);
+
+    my $match;
+    if (not $end) {
+        $match = ($whole =~ /$regex/) ? 1 : 0;
+        push @stack, [$tag, $match]
+            unless $empty{$tag}
+    } else {
+        (my $start_tag, $match) = @{ pop @stack };
+        if ($start_tag ne $tag) {
+            # Yeah, super-specific error message, I know. Sorry. :/
+            warn "ERROR!!!!!!!!!!!  $start_tag <----> $tag\n"
+        }
+    }
+    # Unless endtag of just opened tag.
+    my $prefix = ($end and $tag eq $last)
+        ? ""
+        : "\n" . ("  " x ($indent + ($end ? -1 : 0)));
+
+    # Remember tag.
+    $last = $end . $tag;
+
+    if ($unwrap and $match) {
+        "";
+    } else {
+        # Indent/outdent (except for empty tags).
+        $indent += $empty{$tag} ? 0 : ($end ? -1 : 1);
+        $prefix.
+            ($match ? "\e[7m" : "") .
+            $whole .
+            ($match ? "\e[m" : "");
+    }
+}ge;
+
+$text =~ s#^\n+##;
+$text =~ s#\s*$#\n#;
+
+print $text;
+
+#[eof]
