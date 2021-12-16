@@ -1,12 +1,10 @@
-//-*- js-indent-level: 2; css-indent-offset: 2 -*-
-// Data from: https://glottolog.org/glottolog/family
-let treeData = { "name": "Eskimo-Aleut", "glottolog": "eski1264", "type": "family", "children": [
+{ "name": "Eskimo-Aleut", "glottolog": "eski1264", "type": "family", "children": [
   { "name": "Aleutic", "glottolog": "aleu1261", "type": "family", "children": [
     { "name": "Aleut", "glottolog": "aleu1260", "type": "language", "cas": "", "children": [
       { "name": "Eastern Aleut", "glottolog": "east2533", "type": "dialect" },
-      { "name": "Western Aleut", "glottolog": "west2616", "type": "dialect" },
+      { "name": "Western Aleut", "glottolog": "west2616", "type": "dialect" }
     ]},
-    { "name": "Mednyj Aleut", "glottolog": "medn1235", "type": "language", "cas": "" },
+    { "name": "Mednyj Aleut", "glottolog": "medn1235", "type": "language", "cas": "" }
   ]},
   { "name": "Eskimo", "glottolog": "eski1265", "type": "family", "children": [
     { "name": "Inuit", "glottolog": "inui1246", "type": "family", "children": [
@@ -14,42 +12,42 @@ let treeData = { "name": "Eskimo-Aleut", "glottolog": "eski1264", "type": "famil
         { "name": "North Alaskan Inupiatun", "glottolog": "nort2943", "type": "language", "cas": false, "children": [
           { "name": "Malimiutun", "glottolog": "mali1289", "type": "dialect", "children": [
             { "name": "Kobuk River Inupiatun", "glottolog": "kobu1239", "type": "dialect" },
-            { "name": "Kotzebue Sound Inupiatun", "glottolog": "kotz1238", "type": "dialect" },
+            { "name": "Kotzebue Sound Inupiatun", "glottolog": "kotz1238", "type": "dialect" }
           ]},
-          { "name": "North Slope Inupiatun", "glottolog": "nort2944", "type": "dialect" },
+          { "name": "North Slope Inupiatun", "glottolog": "nort2944", "type": "dialect" }
         ]},
         { "name": "Seward Alaska Inupiatun", "glottolog": "nort2945", "type": "language", "cas": false, "children": [
           { "name": "Bering Strait Inupiatun", "glottolog": "king1259", "type": "dialect" },
-          { "name": "Qawiaraq Inupiatun", "glottolog": "coas1299", "type": "dialect" },
-        ]},
+          { "name": "Qawiaraq Inupiatun", "glottolog": "coas1299", "type": "dialect" }
+        ]}
       ]},
       { "name": "Eastern Canadian Inuktitut", "glottolog": "east2534", "type": "language", "cas": "ᐃᓄᒃᑎᑐᑦ, Inuktitut", "children": [
         { "name": "Baffin Inuktitut", "glottolog": "baff1241", "type": "dialect", "children": [
           { "name": "North Baffin Inuktitut", "glottolog": "baff1240", "type": "dialect", "children": [
             { "name": "Iglulingmiut", "glottolog": "iglu1234", "type": "dialect" },
             { "name": "Polar Eskimo", "glottolog": "pola1254", "type": "dialect" },
-            { "name": "Tununitmiut", "glottolog": "tunu1235", "type": "dialect" },
+            { "name": "Tununitmiut", "glottolog": "tunu1235", "type": "dialect" }
           ]},
-          { "name": "South Baffin Inuktitut", "glottolog": "sout3269", "type": "dialect" },
+          { "name": "South Baffin Inuktitut", "glottolog": "sout3269", "type": "dialect" }
         ]},
         { "name": "Kivalliq", "glottolog": "cari1277", "type": "dialect" },
         { "name": "Quebec-Labrador Inuktitut", "glottolog": "queb1249", "type": "dialect", "children": [
           { "name": "Nunatsiavut", "glottolog": "nuna1235", "type": "dialect", "children": [
             { "name": "North Labrador Eskimo", "glottolog": "labr1244", "type": "dialect" },
-            { "name": "Rigolet Inuktitut", "glottolog": "rigo1234", "type": "dialect" },
+            { "name": "Rigolet Inuktitut", "glottolog": "rigo1234", "type": "dialect" }
           ]},
-          { "name": "Nunavik", "glottolog": "queb1248", "type": "dialect" },
-        ]},
+          { "name": "Nunavik", "glottolog": "queb1248", "type": "dialect" }
+        ]}
       ]},
       { "name": "Greenlandic Inuit", "glottolog": "gree1280", "type": "family", "children": [
         { "name": "Kalaallisut", "glottolog": "kala1399", "type": "language", "cas": false },
-        { "name": "Tunumiisiut", "glottolog": "tunu1234", "type": "language", "cas": false },
+        { "name": "Tunumiisiut", "glottolog": "tunu1234", "type": "language", "cas": false }
       ]},
       { "name": "Western Canadian Inuktitut", "glottolog": "west2618", "type": "language", "cas": false, "children": [
         { "name": "Inuinnaqtun", "glottolog": "copp1244", "type": "dialect" },
         { "name": "Natsilingmiutut", "glottolog": "nets1241", "type": "dialect" },
-        { "name": "Siglitun", "glottolog": "sigl1242", "type": "dialect" },
-      ]},
+        { "name": "Siglitun", "glottolog": "sigl1242", "type": "dialect" }
+      ]}
     ]},
     { "name": "Old Sirenik", "glottolog": "sire1246", "type": "language", "cas": false },
     { "name": "Yupik", "glottolog": "yupi1267", "type": "family", "children": [
@@ -57,15 +55,14 @@ let treeData = { "name": "Eskimo-Aleut", "glottolog": "eski1264", "type": "famil
         { "name": "General Central Yup'ik", "glottolog": "kusk1241", "type": "dialect" },
         { "name": "Hooper Bay-Chevak", "glottolog": "hoop1234", "type": "dialect" },
         { "name": "Nunivak", "glottolog": "nuni1254", "type": "dialect" },
-        { "name": "Unaliq", "glottolog": "unal1234", "type": "dialect" },
+        { "name": "Unaliq", "glottolog": "unal1234", "type": "dialect" }
       ]},
       { "name": "Central Siberian Yupik", "glottolog": "cent2128", "type": "language", "cas": false },
       { "name": "Naukan Yupik", "glottolog": "nauk1242", "type": "language", "cas": false },
       { "name": "Pacific Gulf Yupik", "glottolog": "paci1278", "type": "language", "cas": false, "children": [
         { "name": "Chugach", "glottolog": "chug1254", "type": "dialect" },
-        { "name": "Koniag", "glottolog": "koni1262", "type": "dialect" },
-      ]},
-    ]},
-  ]},
+        { "name": "Koniag", "glottolog": "koni1262", "type": "dialect" }
+      ]}
+    ]}
+  ]}
 ]}
-//[eof]

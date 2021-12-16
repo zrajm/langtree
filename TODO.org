@@ -1,6 +1,7 @@
-* TODO Include all language families in text
 * TODO Radial dendrograms
 * FINISHED
+** DONE Include all language families in text
+   CLOSED: [2021-12-16 Thu 23:24]
 ** DONE Load JSON data from Javascript
    CLOSED: [2021-12-16 Thu 23:18]
    Using pure JSON (instead of loading a Javascript file with variable
